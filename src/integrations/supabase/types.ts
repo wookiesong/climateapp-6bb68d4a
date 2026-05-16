@@ -14,6 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      comments: {
+        Row: {
+          avatar_url: string | null
+          content: string
+          created_at: string
+          display_name: string
+          id: string
+          scenario_key: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          content: string
+          created_at?: string
+          display_name: string
+          id?: string
+          scenario_key: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          content?: string
+          created_at?: string
+          display_name?: string
+          id?: string
+          scenario_key?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       test_items: {
         Row: {
           content: string
