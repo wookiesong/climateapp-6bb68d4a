@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { SCENARIOS, type ScenarioKey } from "@/data/scenarios";
 import ScenarioComparison from "@/components/charts/ScenarioComparison";
+import SectorEmissions from "@/components/charts/SectorEmissions";
+import ScenarioSelector from "@/components/controls/ScenarioSelector";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -10,17 +12,13 @@ export const Route = createFileRoute("/")({
 const ALL_KEYS: ScenarioKey[] = ["bau", "ndc", "50pct"];
 
 function Index() {
-  const [selected, setSelected] = useState<Set<ScenarioKey>>(
-    new Set(ALL_KEYS),
-  );
+  const [selected, setSelected] = useState<ScenarioKey[]>([...ALL_KEYS]);
+  const [sectorScenario, setSectorScenario] = useState<ScenarioKey>("ndc");
 
   const toggle = (key: ScenarioKey) => {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return next;
-    });
+    setSelected((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
+    );
   };
 
   return (
@@ -45,7 +43,6 @@ function Index() {
           </p>
           {ALL_KEYS.map((key) => {
             const s = SCENARIOS[key];
-            const checked = selected.has(key);
             return (
               <label
                 key={key}
@@ -53,7 +50,7 @@ function Index() {
               >
                 <input
                   type="checkbox"
-                  checked={checked}
+                  checked={selected.includes(key)}
                   onChange={() => toggle(key)}
                   className="mt-0.5 cursor-pointer"
                   style={{ accentColor: s.color }}
@@ -71,8 +68,23 @@ function Index() {
         </div>
       </aside>
 
-      <main className="flex-1 p-8">
-        <ScenarioComparison selectedScenarios={Array.from(selected)} />
+      <main className="flex-1 p-8 space-y-6">
+        <ScenarioComparison selectedScenarios={selected} />
+
+        <div className="rounded-xl bg-[#161b22] border border-[#21262d] p-4 space-y-3">
+          <p className="text-xs uppercase tracking-wider text-[#8b949e]">
+            Sector view scenario
+          </p>
+          <ScenarioSelector
+            selected={[sectorScenario]}
+            onChange={(next) => {
+              const pick = next.find((k) => k !== sectorScenario) ?? next[0];
+              if (pick) setSectorScenario(pick as ScenarioKey);
+            }}
+          />
+        </div>
+
+        <SectorEmissions scenarioKey={sectorScenario} />
       </main>
     </div>
   );
