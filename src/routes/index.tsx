@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { SCENARIOS, type ScenarioKey } from "@/data/scenarios";
+import ScenarioComparison from "@/components/charts/ScenarioComparison";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -71,16 +72,7 @@ function Index() {
       </aside>
 
       <main className="flex-1 p-8">
-        <div
-          className="rounded-lg p-6"
-          style={{ background: "#161b22", border: "1px solid #21262d" }}
-        >
-          <h2 className="text-xl font-semibold mb-2">Dashboard</h2>
-          <p style={{ color: "#8b949e" }}>
-            {selected.size} scenario{selected.size === 1 ? "" : "s"} selected.
-            Charts coming in the next phase.
-          </p>
-        </div>
+        <ScenarioComparison selectedScenarios={Array.from(selected)} />
       </main>
     </div>
   );
