@@ -6,6 +6,7 @@ import SectorEmissions from "../charts/SectorEmissions";
 import FuelMixChart from "../charts/FuelMixChart";
 import TechnologyChart from "../charts/TechnologyChart";
 import CarbonBudgetTracker from "../charts/CarbonBudgetTracker";
+import ScenarioTable from "../tables/ScenarioTable";
 
 const ALL_KEYS: ScenarioKey[] = ["bau", "ndc", "50pct"];
 const SHORT: Record<ScenarioKey, string> = {
@@ -77,6 +78,20 @@ export default function Dashboard() {
             })}
           </div>
         </div>
+
+        <div className="mt-6">
+          <ScenarioTable />
+        </div>
+
+        <footer className="mt-10 pt-6 border-t border-[#21262d] text-center space-y-1">
+          <p className="text-xs text-[#484f58]">
+            KLEAP (Korean Long-term Energy & climate Analysis Platform) | Data:
+            GHG projections 2024–2050
+          </p>
+          <p className="text-xs text-[#484f58]">
+            Based on Korea's 2023 National GHG Inventory (707,200 kt CO2eq)
+          </p>
+        </footer>
       </div>
     </div>
   );
