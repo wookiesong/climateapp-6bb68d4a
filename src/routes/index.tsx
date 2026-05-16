@@ -5,6 +5,8 @@ import ScenarioComparison from "@/components/charts/ScenarioComparison";
 import SectorEmissions from "@/components/charts/SectorEmissions";
 import FuelMixChart from "@/components/charts/FuelMixChart";
 import TechnologyChart from "@/components/charts/TechnologyChart";
+import CarbonBudgetTracker from "@/components/charts/CarbonBudgetTracker";
+import KPICards from "@/components/dashboard/KPICards";
 import ScenarioSelector from "@/components/controls/ScenarioSelector";
 
 export const Route = createFileRoute("/")({
@@ -71,6 +73,7 @@ function Index() {
       </aside>
 
       <main className="flex-1 p-8 space-y-6">
+        <KPICards />
         <ScenarioComparison selectedScenarios={selected} />
 
         <div className="rounded-xl bg-[#161b22] border border-[#21262d] p-4 space-y-3">
@@ -92,6 +95,8 @@ function Index() {
           <FuelMixChart scenarioKey={sectorScenario} />
           <TechnologyChart />
         </div>
+
+        <CarbonBudgetTracker />
       </main>
     </div>
   );
