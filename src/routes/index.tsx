@@ -3,6 +3,8 @@ import { useState } from "react";
 import { SCENARIOS, type ScenarioKey } from "@/data/scenarios";
 import ScenarioComparison from "@/components/charts/ScenarioComparison";
 import SectorEmissions from "@/components/charts/SectorEmissions";
+import FuelMixChart from "@/components/charts/FuelMixChart";
+import TechnologyChart from "@/components/charts/TechnologyChart";
 import ScenarioSelector from "@/components/controls/ScenarioSelector";
 
 export const Route = createFileRoute("/")({
@@ -85,6 +87,11 @@ function Index() {
         </div>
 
         <SectorEmissions scenarioKey={sectorScenario} />
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <FuelMixChart scenarioKey={sectorScenario} />
+          <TechnologyChart />
+        </div>
       </main>
     </div>
   );
