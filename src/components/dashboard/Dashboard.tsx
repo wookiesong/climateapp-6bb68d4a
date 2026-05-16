@@ -7,6 +7,8 @@ import FuelMixChart from "../charts/FuelMixChart";
 import TechnologyChart from "../charts/TechnologyChart";
 import CarbonBudgetTracker from "../charts/CarbonBudgetTracker";
 import ScenarioTable from "../tables/ScenarioTable";
+import AuthButton from "../auth/AuthButton";
+import CommentSection from "../comments/CommentSection";
 
 const ALL_KEYS: ScenarioKey[] = ["bau", "ndc", "50pct"];
 const SHORT: Record<ScenarioKey, string> = {
@@ -26,13 +28,16 @@ export default function Dashboard() {
       style={{ background: "#0d1117", color: "#c9d1d9" }}
     >
       <div className="max-w-6xl mx-auto px-6 py-8">
-        <header className="mb-6">
-          <h1 className="text-xl font-bold text-white">
-            KLEAP GHG Projection Dashboard
-          </h1>
-          <p className="text-sm text-[#8b949e] mt-1">
-            Korean Climate Policy Analysis Tool | 2024–2050 Projections
-          </p>
+        <header className="mb-6 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-xl font-bold text-white">
+              KLEAP GHG Projection Dashboard
+            </h1>
+            <p className="text-sm text-[#8b949e] mt-1">
+              Korean Climate Policy Analysis Tool | 2024–2050 Projections
+            </p>
+          </div>
+          <AuthButton />
         </header>
 
         <div className="mb-6">
@@ -81,6 +86,10 @@ export default function Dashboard() {
 
         <div className="mt-6">
           <ScenarioTable />
+        </div>
+
+        <div className="mt-6">
+          <CommentSection />
         </div>
 
         <footer className="mt-10 pt-6 border-t border-[#21262d] text-center space-y-1">
