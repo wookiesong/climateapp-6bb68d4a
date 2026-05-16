@@ -1,118 +1,87 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
-import { Trash2 } from "lucide-react";
+import { useState } from "react";
+import { SCENARIOS, type ScenarioKey } from "@/data/scenarios";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type TestItem = {
-  id: string;
-  content: string;
-  created_at: string;
-};
+const ALL_KEYS: ScenarioKey[] = ["bau", "ndc", "50pct"];
 
 function Index() {
-  const [items, setItems] = useState<TestItem[]>([]);
-  const [content, setContent] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Set<ScenarioKey>>(
+    new Set(ALL_KEYS),
+  );
 
-  const fetchItems = async () => {
-    const { data, error } = await supabase
-      .from("test_items")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (error) setError(error.message);
-    else setItems(data ?? []);
-  };
-
-  useEffect(() => {
-    fetchItems();
-  }, []);
-
-  const handleAdd = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!content.trim()) return;
-    setLoading(true);
-    setError(null);
-    const { error } = await supabase
-      .from("test_items")
-      .insert({ content: content.trim() });
-    if (error) setError(error.message);
-    else {
-      setContent("");
-      await fetchItems();
-    }
-    setLoading(false);
-  };
-
-  const handleDelete = async (id: string) => {
-    const { error } = await supabase.from("test_items").delete().eq("id", id);
-    if (error) setError(error.message);
-    else await fetchItems();
+  const toggle = (key: ScenarioKey) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
   };
 
   return (
-    <main className="min-h-screen bg-background py-12 px-4">
-      <div className="mx-auto max-w-2xl">
-        <h1 className="text-3xl font-bold text-foreground mb-2">
-          Supabase 테스트 페이지
+    <div
+      className="flex min-h-screen"
+      style={{ background: "#0d1117", color: "#c9d1d9" }}
+    >
+      <aside
+        className="flex flex-col p-6 shrink-0"
+        style={{
+          width: 256,
+          background: "#161b22",
+          borderRight: "1px solid #21262d",
+        }}
+      >
+        <h1 className="text-2xl font-bold tracking-wide mb-8" style={{ color: "#c9d1d9" }}>
+          KLEAP
         </h1>
-        <p className="text-muted-foreground mb-8">
-          데이터를 읽고 쓰는 간단한 테스트입니다.
-        </p>
-
-        <Card className="p-4 mb-6">
-          <form onSubmit={handleAdd} className="flex gap-2">
-            <Input
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="내용을 입력하세요..."
-              disabled={loading}
-            />
-            <Button type="submit" disabled={loading || !content.trim()}>
-              추가
-            </Button>
-          </form>
-          {error && (
-            <p className="text-sm text-destructive mt-2">{error}</p>
-          )}
-        </Card>
-
-        <div className="space-y-2">
-          {items.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">
-              아직 데이터가 없습니다.
-            </p>
-          ) : (
-            items.map((item) => (
-              <Card
-                key={item.id}
-                className="p-4 flex items-center justify-between"
+        <div className="space-y-3">
+          <p className="text-xs uppercase tracking-wider" style={{ color: "#8b949e" }}>
+            Scenarios
+          </p>
+          {ALL_KEYS.map((key) => {
+            const s = SCENARIOS[key];
+            const checked = selected.has(key);
+            return (
+              <label
+                key={key}
+                className="flex items-start gap-3 cursor-pointer text-sm leading-snug"
               >
-                <div>
-                  <p className="text-foreground">{item.content}</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {new Date(item.created_at).toLocaleString()}
-                  </p>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleDelete(item.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </Card>
-            ))
-          )}
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => toggle(key)}
+                  className="mt-0.5 cursor-pointer"
+                  style={{ accentColor: s.color }}
+                />
+                <span className="flex items-center gap-2">
+                  <span
+                    className="inline-block w-2.5 h-2.5 rounded-full"
+                    style={{ background: s.color }}
+                  />
+                  <span>{s.label}</span>
+                </span>
+              </label>
+            );
+          })}
         </div>
-      </div>
-    </main>
+      </aside>
+
+      <main className="flex-1 p-8">
+        <div
+          className="rounded-lg p-6"
+          style={{ background: "#161b22", border: "1px solid #21262d" }}
+        >
+          <h2 className="text-xl font-semibold mb-2">Dashboard</h2>
+          <p style={{ color: "#8b949e" }}>
+            {selected.size} scenario{selected.size === 1 ? "" : "s"} selected.
+            Charts coming in the next phase.
+          </p>
+        </div>
+      </main>
+    </div>
   );
 }
